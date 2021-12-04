@@ -7,3 +7,4 @@ from AdvancedDevelopment.wsgi import application as app
 # App Engine without additional configuration.
 # Alternatively, you can add a custom entrypoint field in your app.yaml:
 # entrypoint: gunicorn -b :$PORT mysite.wsgi
+# https://stackoverflow.com/questions/52395695/modulenotfounderror-no-module-named-main-when-attempting-to-start-service
