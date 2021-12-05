@@ -7,6 +7,9 @@ import firebase_admin.auth as auth
 
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
+    """
+    https://jrizmal.medium.com/how-to-authenticate-firebase-users-in-django-rest-framework-c2d90f5a0a11
+    """
     def authenticate(self, request):
 
         token = request.headers.get('Authorization')
