@@ -1,0 +1,11 @@
+{% extends "submissions/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    Are you sure you wish to deactivate your account?
+    <input type="submit" class="btn btn-danger" value="Yes, I'm sure">
+    <a href="{% url "profile" %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

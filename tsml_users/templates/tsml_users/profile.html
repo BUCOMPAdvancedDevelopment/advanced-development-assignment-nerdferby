@@ -1,0 +1,45 @@
+{% extends "submissions/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ user.username }}</h2>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div>
+        </div>
+        {% if ban %}
+            <div class="card p-1 m-1">
+                <h4 class="card-title">Account suspended</h4>
+                <p class="card-text">{{ ban.get_ban_type_display|capfirst }} ban
+                    issued {{ ban.issued_when|date:"jS F, Y" }}{% if ban.expires is None %}.{% else %},{% endif %}
+                    {% if ban.expires %}
+                        expires <b>{{ ban.expires|date:"jS F, Y" }}</b> at <b>{{ ban.expires|date:"g:i a" }}</b>
+                    {% endif %}
+                </p>
+                {% if ban.issued_message %}
+                    <p class="card-text">
+                        <em>
+                            {{ ban.issued_message }}
+                        </em>
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+        <form enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">
+                    Change profile
+                </legend>
+                {{ u_form }}
+                {{ p_form }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
