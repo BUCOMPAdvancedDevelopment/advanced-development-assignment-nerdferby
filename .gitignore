@@ -31,7 +31,7 @@ media
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-secrets/*
+secrets/
 
 # Gradle
 .idea/**/gradle.xml
