@@ -3,7 +3,7 @@ from .models import Profile
 
 
 class ProfileAdminConf(admin.ModelAdmin):
-    list_display = ["user"]
+    list_display = ["tsml_users"]
 
 
 admin.site.register(Profile, ProfileAdminConf)

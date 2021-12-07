@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views import View
-
-from moderation.models import Ban
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
 
@@ -50,11 +48,9 @@ class ProfileView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
-        ban = Ban.objects.filter(user=request.user).first()
 
         context = {"u_form": u_form,
-                   "p_form": p_form,
-                   "ban": ban
+                   "p_form": p_form
                    }
         return render(request, "tsml_users/profile.html", context)
 
