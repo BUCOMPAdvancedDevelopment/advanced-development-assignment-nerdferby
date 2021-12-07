@@ -8,19 +8,15 @@ from firebase_admin import auth
 
 
 class UserRegisterForm(UserCreationForm):
+    """
+    Registers the user through django and firebase
+    """
     email = forms.EmailField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            user = auth.create_user(
-                email=self.email,
-                email_verified=False,
-                password=super().clean_password2(),
-                display_name='',
-                photo_url='',
-                disabled=False
-            )
+            user = auth.create_user(self)
             print('Successfully created new user: {0}'.format(user.uid))
         except ValidationError as error:
             print(error.message)
