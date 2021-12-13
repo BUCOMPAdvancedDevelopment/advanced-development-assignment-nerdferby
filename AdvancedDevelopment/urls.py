@@ -17,16 +17,17 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from parcel.views import ProductDetailView, ParcelDetailView
+from products.views import ProductDetailView, OrderDetailView, OrderCreateView
 from users import views as user_views
-from parcel import views as parcel_views
+from products import views as parcel_views
 from users.views import ProfileView, DeactivateUser
 
 urlpatterns = [
-    path("/", parcel_views.home, name="home"),
+    path("", parcel_views.home, name="home"),
     path("admin/", admin.site.urls),
     path("product/<int:pk>/", ProductDetailView.as_view(), name="product"),
-    path("order/<int:pk>/", ParcelDetailView.as_view(), name="parcel"),
+    path("order/<int:pk>/", OrderDetailView.as_view(), name="order"),
+    path("order/new/", OrderCreateView.as_view(), name="order-create"),
     path("register/", user_views.register, name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
     path("profile/deactivate", DeactivateUser.as_view(), name="delete-profile"),

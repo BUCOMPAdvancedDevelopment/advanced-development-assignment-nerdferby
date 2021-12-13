@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "advanced-development-333919.nw.r.app
 # Application definition
 
 INSTALLED_APPS = [
-    'parcel.apps.ParcelConfig',
+    'products.apps.ParcelConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -79,6 +79,15 @@ WSGI_APPLICATION = 'AdvancedDevelopment.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    "default": {
+        "engine": "djongo",
+        # "name": "db-name"  # todo change this
+        "enforce_schema": False,
+        "client": {
+            # todo hide this in secrets
+            "host": "mongodb+srv://s5124723:UJZ6xxtNrnYwSNWowyz8@advanceddevelopment.aiiro.mongodb.net/test?authSource=admin&replicaSet=atlas-xtge2j-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
+        }
+    }
 }
 
 
@@ -139,5 +148,6 @@ firebase_admin.initialize_app(cred)
 
 # Specify your Google API key as environment variable GOOGLE_API_KEY
 # You may also specify it here, though be sure not to commit it to a repository
+# todo hide this in secrets
 GOOGLE_API_KEY = 'AIzaSyBvikAKlkILoJTxKC5w0bgUAOOG_U8o4-U'  # Specify your Google API key here
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', GOOGLE_API_KEY)
