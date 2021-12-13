@@ -1,0 +1,12 @@
+{% extends "parcel/base.html" %}
+{% block content %}
+    <h1>Order #{{ parcel.id }} · {{ parcel.shipping.status }}</h1>
+    <h2>Shipping details</h2>
+    <p>{{ parcel.shipping.status }}</p>
+    <p>{{ parcel.shipping.address }}</p>
+    <ul>
+    {% for product in parcel %}
+        <li>{{ product.name }} · £{{ product.price }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

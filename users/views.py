@@ -22,12 +22,12 @@ def register(request):
             return redirect("login")
     else:
         form = UserRegisterForm()
-    return render(request, "tsml_users/register.html", {"form": form})
+    return render(request, "users/register.html", {"form": form})
 
 
 class DeactivateUser(View):
     def get(self, request):
-        return render(request, "tsml_users/profile_deactivate_confirm.html")
+        return render(request, "users/profile_deactivate_confirm.html")
 
     def post(self, request):
         try:
@@ -40,7 +40,7 @@ class DeactivateUser(View):
         except Exception as e:
             messages.error(request, e.message)
 
-        # return render(request, "tsml_users/profile_deactivate_confirm.html", context=context)
+        # return render(request, "users/profile_deactivate_confirm.html", context=context)
         return redirect("/")
 
 
@@ -52,7 +52,7 @@ class ProfileView(LoginRequiredMixin, View):
         context = {"u_form": u_form,
                    "p_form": p_form
                    }
-        return render(request, "tsml_users/profile.html", context)
+        return render(request, "users/profile.html", context)
 
     def post(self, request, *args, **kwargs):
         u_form = UserUpdateForm(request.POST, instance=request.user)

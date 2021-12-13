@@ -13,10 +13,13 @@ class UserRegisterForm(UserCreationForm):
     """
     email = forms.EmailField()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def save(self, *args, **kwargs):
         try:
-            user = auth.create_user(self)
+            user = auth.create_user(
+                email=self.email,
+                email_verified=False,
+                password=self.clean_password2())
+            super().save(*args, **kwargs)
             print('Successfully created new user: {0}'.format(user.uid))
         except ValidationError as error:
             print(error.message)

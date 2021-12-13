@@ -7,3 +7,5 @@ sqlparse==0.4.2
 djangorestframework~=3.12.4
 Pillow~=8.4.0
 google-cloud-secret-manager==2.8.0
+django-crispy-forms==1.13.0
+django-address==0.2.5

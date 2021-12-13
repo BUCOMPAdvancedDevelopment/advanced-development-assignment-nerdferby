@@ -14,9 +14,8 @@ from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -33,13 +32,16 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "advanced-development-333919.nw.r.app
 # Application definition
 
 INSTALLED_APPS = [
+    'parcel.apps.ParcelConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tsml_users.apps.UsersConfig',
+    'address',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -52,19 +54,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'FirebaseAuth.authentication.FirebaseAuthentication',
-    ]
-}
-
 ROOT_URLCONF = 'AdvancedDevelopment.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR + 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,10 +79,6 @@ WSGI_APPLICATION = 'AdvancedDevelopment.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
 }
 
 
@@ -134,5 +125,19 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Certifying Firebase credentials for Firebase integration
+# https://jrizmal.medium.com/how-to-authenticate-firebase-users-in-django-rest-framework-c2d90f5a0a11
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'FirebaseAuth.authentication.FirebaseAuthentication',
+    ]
+}
 cred = credentials.Certificate(os.path.join(BASE_DIR, "secrets/advanced-development-333919-25398fb03356.json"))
 firebase_admin.initialize_app(cred)
+
+
+# Specify your Google API key as environment variable GOOGLE_API_KEY
+# You may also specify it here, though be sure not to commit it to a repository
+GOOGLE_API_KEY = 'AIzaSyBvikAKlkILoJTxKC5w0bgUAOOG_U8o4-U'  # Specify your Google API key here
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', GOOGLE_API_KEY)
