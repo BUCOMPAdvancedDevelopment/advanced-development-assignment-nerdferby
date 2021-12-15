@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials
+import djongo
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,6 +33,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "advanced-development-333919.nw.r.app
 # Application definition
 
 INSTALLED_APPS = [
+    'address',
     'products.apps.ParcelConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
@@ -40,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'address',
     'crispy_forms'
 ]
 
@@ -79,16 +80,11 @@ WSGI_APPLICATION = 'AdvancedDevelopment.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "engine": "djongo",
-        # "name": "db-name"  # todo change this
-        "enforce_schema": False,
-        "client": {
-            # todo hide this in secrets
-            "host": "mongodb+srv://s5124723:UJZ6xxtNrnYwSNWowyz8@advanceddevelopment.aiiro.mongodb.net/test?authSource=admin&replicaSet=atlas-xtge2j-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
-        }
-    }
-}
+     'default': {
+         'ENGINE': 'djongo',
+         'NAME': 'AdvancedDevelopment',
+     }
+ }
 
 
 # Password validation

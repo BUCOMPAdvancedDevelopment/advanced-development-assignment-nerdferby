@@ -26,7 +26,7 @@ class Order(models.Model):
 
     product = Product
     quantity = models.IntegerField()
-    address = AddressField()
+    # address = AddressField()  # todo needs default value as migrations have been made
     status = models.CharField(default="1", max_length=1, choices=STATUS_CHOICES)
     customer = get_user_model()
 
