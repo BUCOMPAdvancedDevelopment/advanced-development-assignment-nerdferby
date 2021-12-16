@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views import View
+from django.core.exceptions import ValidationError
+from firebase_admin import auth
+
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
 
@@ -15,11 +18,24 @@ def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(
-                request, "Your account has been created! You can now log in."
-            )
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password2"]
+            username = form.cleaned_data["username"]
+            try:
+                user = auth.create_user(
+                    email=email,
+                    email_verified=False,
+                    password=password)
+                print('Successfully created new user: {0}'.format(user.uid))
+                form.save()
+                messages.success(
+                    request, "Your account has been created! You can now log in."
+                )
+            except ValidationError as error:
+                print(error.message)
             return redirect("login")
+        else:
+            messages.error(request, "something went wrong")
     else:
         form = UserRegisterForm()
     return render(request, "users/register.html", {"form": form})
