@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.core.exceptions import ValidationError
 from firebase_admin import auth
+from firebase_admin.exceptions import PermissionDeniedError
 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
@@ -33,6 +34,8 @@ def register(request):
                 )
             except ValidationError as error:
                 print(error.message)
+            except PermissionDeniedError as error:
+                messages.error(request, error.cause)
             return redirect("login")
         else:
             messages.error(request, "something went wrong")
@@ -41,23 +44,23 @@ def register(request):
     return render(request, "users/register.html", {"form": form})
 
 
-class DeactivateUser(View):
-    def get(self, request):
-        return render(request, "users/profile_deactivate_confirm.html")
-
-    def post(self, request):
-        try:
-            user = User.objects.get(username=request.user.username)
-            user.is_active = False
-            user.save()
-            messages.success(request, f"Account {user.username} has been disabled!")
-        except User.DoesNotExist:
-            messages.error(request, "Account does not exist")
-        except Exception as e:
-            messages.error(request, e.message)
-
-        # return render(request, "users/profile_deactivate_confirm.html", context=context)
-        return redirect("/")
+# class DeactivateUser(View):
+#     def get(self, request):
+#         return render(request, "users/profile_deactivate_confirm.html")
+#
+#     def post(self, request):
+#         try:
+#             user = User.objects.get(username=request.user.username)
+#             user.is_active = False
+#             user.save()
+#             messages.success(request, f"Account {user.username} has been disabled!")
+#         except User.DoesNotExist:
+#             messages.error(request, "Account does not exist")
+#         except Exception as e:
+#             messages.error(request, e.message)
+#
+#         # return render(request, "users/profile_deactivate_confirm.html", context=context)
+#         return redirect("/")
 
 
 class ProfileView(LoginRequiredMixin, View):

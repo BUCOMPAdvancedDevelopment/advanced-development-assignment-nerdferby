@@ -20,7 +20,7 @@ from django.urls import path
 from products.views import ProductDetailView, OrderDetailView, OrderCreateView
 from users import views as user_views
 from products import views as parcel_views
-from users.views import ProfileView, DeactivateUser
+from users.views import ProfileView
 
 urlpatterns = [
     # path("", parcel_views.home, name="home"),
@@ -31,7 +31,7 @@ urlpatterns = [
     path("order/new/", OrderCreateView.as_view(), name="order-create"),
     path("register/", user_views.register, name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
-    path("profile/deactivate", DeactivateUser.as_view(), name="delete-profile"),
+    # path("profile/deactivate", DeactivateUser.as_view(), name="delete-profile"),
     path(
         "login/",
         auth_views.LoginView.as_view(template_name="users/login.html"),
