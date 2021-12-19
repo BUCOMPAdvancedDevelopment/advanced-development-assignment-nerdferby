@@ -14,6 +14,8 @@ from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials
 import djongo
+import requests
+from google.cloud import secretmanager
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -27,7 +29,7 @@ SECRET_KEY = 'django-insecure-8@ai$vzq04xi!oq#rl6z@8*h8h^7w8u(6n-g+9ptnvjf*#&o$7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "advanced-development-333919.nw.r.appspot.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "idyllic-kit-328813.ew.r.appspot.com"]
 
 
 # Application definition
@@ -138,12 +140,17 @@ REST_FRAMEWORK = {
         'FirebaseAuth.authentication.FirebaseAuthentication',
     ]
 }
-cred = credentials.Certificate(os.path.join(BASE_DIR, "secrets/advanced-development-333919-25398fb03356.json"))
-firebase_admin.initialize_app(cred)
 
 
 # Specify your Google API key as environment variable GOOGLE_API_KEY
 # You may also specify it here, though be sure not to commit it to a repository
 # todo hide this in secrets
-GOOGLE_API_KEY = 'AIzaSyBvikAKlkILoJTxKC5w0bgUAOOG_U8o4-U'  # Specify your Google API key here
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', GOOGLE_API_KEY)
+# GOOGLE_API_KEY = 'AIzaSyBvikAKlkILoJTxKC5w0bgUAOOG_U8o4-U'  # Specify your Google API key here
+# GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', GOOGLE_API_KEY)
+
+secrets = secretmanager.SecretManagerServiceClient()
+# fixme fetches secret successfully as string, needs to be file path
+# response = secrets.access_secret_version(name="projects/idyllic-kit-328813/secrets/Firebase_Admin_SDK/versions/2")
+# cred = credentials.Certificate(response)
+cred = credentials.Certificate(os.path.join(BASE_DIR, "firebase_admin_sdk.json"))
+firebase_admin.initialize_app(cred)
