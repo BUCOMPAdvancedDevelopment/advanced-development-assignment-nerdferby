@@ -15,11 +15,5 @@ def access_secret_version(project_id, secret_id, version_id):
 
     # Access the secret version.
     response = client.access_secret_version(request={"name": name})
-
-    # Print the secret payload.
-    #
-    # WARNING: Do not print the secret in a production environment - this
-    # snippet is showing how to access the secret material.
-    payload = response.payload.data.decode("UTF-8")
-    print("Plaintext: {}".format(payload))
+    return response
     

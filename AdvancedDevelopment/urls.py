@@ -23,8 +23,8 @@ from products import views as parcel_views
 from users.views import ProfileView
 
 urlpatterns = [
-    # path("", parcel_views.home, name="home"),
-    path("", user_views.register, name="home"),
+    path("", parcel_views.home, name="home"),
+    # path("", user_views.register, name="home"),
     path("admin/", admin.site.urls),
     path("product/<int:pk>/", ProductDetailView.as_view(), name="product"),
     path("order/<int:pk>/", OrderDetailView.as_view(), name="order"),

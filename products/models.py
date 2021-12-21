@@ -24,9 +24,9 @@ class Order(models.Model):
         ("6", "Order delivered and fulfilled")
     ]
 
-    product = Product
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    # address = AddressField()  # todo needs default value as migrations have been made
+    address = AddressField()
     status = models.CharField(default="1", max_length=1, choices=STATUS_CHOICES)
     customer = get_user_model()
 

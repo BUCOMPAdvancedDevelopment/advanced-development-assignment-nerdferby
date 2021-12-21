@@ -17,7 +17,7 @@ class OrderDetailView(DetailView):
     model = Order
 
 
-class OrderCreateView(LoginRequiredMixin, CreateView):
+class OrderCreateView(CreateView):
     model = Order
     fields = ["product", "quantity", "address"]
 
