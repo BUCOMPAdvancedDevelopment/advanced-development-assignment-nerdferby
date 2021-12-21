@@ -15,6 +15,7 @@ import firebase_admin
 from firebase_admin import credentials
 import djongo
 import requests
+from google.api_core.exceptions import PermissionDenied
 from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import secretmanager
 
@@ -87,11 +88,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-     'default': {
-         'ENGINE': 'djongo',
-         'NAME': 'AdvancedDevelopment',
-     }
- }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+    }
+}
 
 
 # Password validation
@@ -117,13 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -132,10 +129,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # Certifying Firebase credentials for Firebase integration
 # https://jrizmal.medium.com/how-to-authenticate-firebase-users-in-django-rest-framework-c2d90f5a0a11
@@ -146,13 +145,17 @@ REST_FRAMEWORK = {
     ]
 }
 
+# Specify your Google API key as environment variable GOOGLE_API_KEY
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "F:/Projects/AdvancedDevelopment/firebase_admin_sdk.json"
+
+secrets = secretmanager.SecretManagerServiceClient()
+
 try:
-    secrets = secretmanager.SecretManagerServiceClient()
-    # fixme fetches secret successfully as string, needs to be file path
-    # fixme only works on gcloud
-    # response = secrets.access_secret_version(name="projects/idyllic-kit-328813/secrets/Firebase_Admin_SDK/versions/2")
-    # cred = credentials.Certificate(response)
+    # todo save response to file
+    response = secrets.access_secret_version(name="projects/idyllic-kit-328813/secrets/Firebase_Admin_SDK/versions/latest")
+    cred = credentials.Certificate(response)
+except PermissionDenied as exception:  # todo write to log
     cred = credentials.Certificate(os.path.join(BASE_DIR, "firebase_admin_sdk.json"))
-    firebase_admin.initialize_app(cred)
-except DefaultCredentialsError as exception:  # todo write to log
-    pass
+
+firebase_admin.initialize_app(cred)
