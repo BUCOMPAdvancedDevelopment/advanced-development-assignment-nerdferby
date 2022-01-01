@@ -19,26 +19,11 @@ def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data["email"]
-            password = form.cleaned_data["password2"]
-            username = form.cleaned_data["username"]
-            try:
-                user = auth.create_user(
-                    email=email,
-                    email_verified=False,
-                    password=password)
-                print('Successfully created new user: {0}'.format(user.uid))
-                form.save()
-                messages.success(
-                    request, "Your account has been created! You can now log in."
-                )
-            except ValidationError as error:
-                print(error.message)
-            except PermissionDeniedError as error:
-                messages.error(request, error.cause)
+            form.save()
+            messages.success(
+                request, "Your account has been created! You can now log in."
+            )
             return redirect("login")
-        else:
-            messages.error(request, "something went wrong")
     else:
         form = UserRegisterForm()
     return render(request, "users/register.html", {"form": form})
