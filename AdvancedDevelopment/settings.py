@@ -26,13 +26,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8@ai$vzq04xi!oq#rl6z@8*h8h^7w8u(6n-g+9ptnvjf*#&o$7'
+secrets = secretmanager.SecretManagerServiceClient()
+SECRET_KEY = secrets.access_secret_version(
+        name="projects/idyllic-kit-328813/secrets/django_secret_key/versions/latest")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "idyllic-kit-328813.ew.r.appspot.com"]
-
 
 # Application definition
 
@@ -94,7 +95,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -113,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -123,39 +122,37 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # Certifying Firebase credentials for Firebase integration
 # https://jrizmal.medium.com/how-to-authenticate-firebase-users-in-django-rest-framework-c2d90f5a0a11
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'FirebaseAuth.authentication.FirebaseAuthentication',
-    ]
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'FirebaseAuth.authentication.FirebaseAuthentication',
+#     ]
+# }
 
 # Specify your Google API key as environment variable GOOGLE_API_KEY
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "F:/Projects/AdvancedDevelopment/firebase_admin_sdk.json"
+GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR, "firebase_admin_sdk.json")
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS',
+                                                              GOOGLE_APPLICATION_CREDENTIALS)
 
-secrets = secretmanager.SecretManagerServiceClient()
-
-try:
-    # todo save response to file
-    response = secrets.access_secret_version(name="projects/idyllic-kit-328813/secrets/Firebase_Admin_SDK/versions/latest")
-    cred = credentials.Certificate(response)
-except PermissionDenied as exception:  # todo write to log
-    cred = credentials.Certificate(os.path.join(BASE_DIR, "firebase_admin_sdk.json"))
-
-firebase_admin.initialize_app(cred)
+# try:
+#     # todo save response to file
+#     response = secrets.access_secret_version(
+#         name="projects/idyllic-kit-328813/secrets/Firebase_Admin_SDK/versions/latest")
+#     cred = credentials.Certificate(response)
+# except PermissionDenied as exception:  # todo write to log
+#     cred = credentials.Certificate(os.path.join(BASE_DIR, "firebase_admin_sdk.json"))
+#
+# firebase_admin.initialize_app(cred)
