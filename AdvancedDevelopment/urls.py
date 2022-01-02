@@ -32,9 +32,14 @@ urlpatterns = [
     path("register/", user_views.register, name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
     # path("profile/deactivate", DeactivateUser.as_view(), name="delete-profile"),
-    path(
+    # path(
+    #     "login/",
+    #     auth_views.LoginView.as_view(template_name="users/login.html"),
+    #     name="login",
+    # ),
+    path(   
         "login/",
-        auth_views.LoginView.as_view(template_name="users/login.html"),
+        user_views.login,
         name="login",
     ),
     path(

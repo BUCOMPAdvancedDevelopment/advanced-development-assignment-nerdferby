@@ -6,6 +6,14 @@ from django.core.exceptions import ValidationError
 from .models import Profile
 
 
+class CustomLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.PasswordInput()
+
+    class Meta:
+        fields = ["email", "password"]
+
+
 class UserRegisterForm(UserCreationForm):
     """
     Registers the user through django and firebase

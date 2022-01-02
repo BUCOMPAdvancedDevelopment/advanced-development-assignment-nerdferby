@@ -8,25 +8,40 @@ from django.core.exceptions import ValidationError
 from firebase_admin import auth
 from firebase_admin.exceptions import PermissionDeniedError
 
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CustomLoginForm
+from AdvancedDevelopment.firebase import add_data, get_all_data
 
 
 def register(request):
-    """
-    @param request: Required to set up the view
-    @return: Renders the form and redirects from register page to login on POST
-    """
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            data = form.cleaned_data
+            add_data(u'users', str(data["username"]), data)
             messages.success(
-                request, "Your account has been created! You can now log in."
+                request, f"Form valid. Username is {data['username']}. User not created"
             )
-            return redirect("login")
+            # form.save()
+            # messages.success(
+            #     request, "Your account has been created! You can now log in."
+            # )
+            # return redirect("login")
     else:
         form = UserRegisterForm()
     return render(request, "users/register.html", {"form": form})
+
+
+def login(request):
+    if request.method == "POST":
+        # todo sanitise inputs
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            messages.success(request, "Login successful!")
+        else: 
+            messages.error(request, "Failed to login!")
+    else:
+        form = CustomLoginForm()
+    return render(request, "users/login.html")
 
 
 # class DeactivateUser(View):
