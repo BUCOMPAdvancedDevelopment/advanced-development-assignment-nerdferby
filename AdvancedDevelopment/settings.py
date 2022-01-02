@@ -19,16 +19,24 @@ from google.api_core.exceptions import PermissionDenied
 from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import secretmanager
 
+from AdvancedDevelopment.secrets import get_secret
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+# Specify your Google API key as environment variable GOOGLE_API_KEY
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR, "firebase_admin_sdk.json")
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS',
+                                                              GOOGLE_APPLICATION_CREDENTIALS)
+
 # SECURITY WARNING: keep the secret key used in production secret!
 secrets = secretmanager.SecretManagerServiceClient()
-SECRET_KEY = secrets.access_secret_version(
-        name="projects/idyllic-kit-328813/secrets/django_secret_key/versions/latest")
+SECRET_KEY = get_secret("projects/idyllic-kit-328813/secrets/django_secret_key/versions/latest",
+                        lambda: open(os.path.join(BASE_DIR, "django_secret_key.txt")).read())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -140,12 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         'FirebaseAuth.authentication.FirebaseAuthentication',
 #     ]
 # }
-
-# Specify your Google API key as environment variable GOOGLE_API_KEY
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
-GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR, "firebase_admin_sdk.json")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS',
-                                                              GOOGLE_APPLICATION_CREDENTIALS)
 
 # try:
 #     # todo save response to file

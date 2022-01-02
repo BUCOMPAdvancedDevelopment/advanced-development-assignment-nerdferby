@@ -33,7 +33,6 @@ def register(request):
 
 def login(request):
     if request.method == "POST":
-        # todo sanitise inputs
         form = CustomLoginForm(request.POST)
         if form.is_valid():
             messages.success(request, "Login successful!")

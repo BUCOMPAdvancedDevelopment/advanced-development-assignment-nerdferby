@@ -140,3 +140,4 @@ GitHub.sublime-settings
 *.whl
 
 firebase_admin_sdk.json
+django_secret_key.txt
