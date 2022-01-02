@@ -16,19 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
-
-from products.views import ProductDetailView, OrderDetailView, OrderCreateView
+from products import views as product_views
 from users import views as user_views
-from products import views as parcel_views
 from users.views import ProfileView
 
 urlpatterns = [
-    path("", parcel_views.home, name="home"),
+    path("", product_views.home, name="home"),
     # path("", user_views.register, name="home"),
     path("admin/", admin.site.urls),
-    path("product/<int:pk>/", ProductDetailView.as_view(), name="product"),
-    path("order/<int:pk>/", OrderDetailView.as_view(), name="order"),
-    path("order/new/", OrderCreateView.as_view(), name="order-create"),
+    path("product/new/", product_views.ProductCreateView.as_view(), name="product-create"),
+    path("product/<str:pk>/", product_views.product_detail_view, name="product"),
+    # path("order/<int:pk>/", product_views.OrderDetailView.as_view(), name="order"),
+    # path("order/new/", product_views.OrderCreateView.as_view(), name="order-create"),
     path("register/", user_views.register, name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
     # path("profile/deactivate", DeactivateUser.as_view(), name="delete-profile"),
@@ -37,7 +36,7 @@ urlpatterns = [
     #     auth_views.LoginView.as_view(template_name="users/login.html"),
     #     name="login",
     # ),
-    path(   
+    path(
         "login/",
         user_views.login,
         name="login",
@@ -82,4 +81,3 @@ urlpatterns = [
         name="password_reset_complete",
     )
 ]
-

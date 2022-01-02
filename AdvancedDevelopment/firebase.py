@@ -9,18 +9,46 @@ from firebase_admin import firestore
 # Use the application default credentials
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred, {
-  'projectId': 'idyllic-kit-328813',
+    'projectId': 'idyllic-kit-328813',
 })
 
-firestore_db = firestore.client()
 
+class FirebaseClient:
+    """Source: https://github.com/saadmk11/django-todo"""
 
-def add_data(collection, document, raw_data, db=firestore_db):
-    doc_ref = db.collection(collection).document(document)
-    doc_ref.set(raw_data)
+    def __init__(self, collection):
+        self._db = firestore.client()
+        self._collection = self._db.collection(str(collection))
 
+    def create(self, data, document: str = None):
+        """Create item in firestore database"""
+        doc_ref = self._collection.document(document)
+        doc_ref.set(data)
 
-def get_all_data(collection, db=firestore_db):
-    col = db.collection(collection)
-    docs = col.stream()
-    return docs.to_dict()
+    def update(self, document, data):
+        """Update item on firestore database using document id"""
+        doc_ref = self._collection.document(document)
+        doc_ref.update(data)
+
+    def delete_by_id(self, document):
+        """Delete item on firestore database using document id"""
+        self._collection.document(document).delete()
+
+    def get_by_id(self, document):
+        """Get item on firestore database using document id"""
+        doc_ref = self._collection.document(document)
+        doc = doc_ref.get()
+
+        if doc.exists:
+            return {**doc.to_dict(), "id": doc.id}
+        return False
+
+    def all(self):
+        """Get all item from firestore database"""
+        docs = self._collection.stream()
+        return [{**doc.to_dict(), "id": doc.id} for doc in docs]
+
+    def filter(self, field, condition, value):
+        """Filter item using conditions on firestore database"""
+        docs = self._collection.where(field, condition, value).stream()
+        return [{**doc.to_dict(), "id": doc.id} for doc in docs]

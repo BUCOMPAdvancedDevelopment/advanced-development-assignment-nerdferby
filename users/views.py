@@ -9,7 +9,8 @@ from firebase_admin import auth
 from firebase_admin.exceptions import PermissionDeniedError
 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CustomLoginForm
-from AdvancedDevelopment.firebase import add_data, get_all_data
+# from AdvancedDevelopment.firebase import add_data, get_all_data
+from AdvancedDevelopment.firebase import FirebaseClient
 
 
 def register(request):
@@ -17,7 +18,8 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            add_data(u'users', str(data["username"]), data)
+            firebase = FirebaseClient("users")
+            firebase.create(document=str(data["username"]), data=data)
             messages.success(
                 request, f"Form valid. Username is {data['username']}. User not created"
             )
