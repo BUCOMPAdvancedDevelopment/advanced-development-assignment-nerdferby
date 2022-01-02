@@ -21,26 +21,36 @@ def register(request):
             messages.success(
                 request, f"Form valid. Username is {data['username']}. User not created"
             )
-            # form.save()
-            # messages.success(
-            #     request, "Your account has been created! You can now log in."
-            # )
-            # return redirect("login")
     else:
         form = UserRegisterForm()
     return render(request, "users/register.html", {"form": form})
 
 
 def login(request):
+    try:
+        messages.warning(request, f"You are already logged in as, {request.session['login']}")
+    except KeyError:
+        pass
     if request.method == "POST":
         form = CustomLoginForm(request.POST)
         if form.is_valid():
-            messages.success(request, "Login successful!")
-        else: 
+            messages.success(request, f"Successful login as, {form.cleaned_data['email']}")
+            request.session["login"] = form.cleaned_data["email"]
+        else:
             messages.error(request, "Failed to login!")
     else:
         form = CustomLoginForm()
     return render(request, "users/login.html")
+
+
+def logout(request):
+    session: str
+    try:
+        request.session.pop("login")
+        messages.success(request, "You have been successfully logged out")
+        return redirect(login)
+    except KeyError:  # user is not logged in, redirect to login page
+        return redirect(login)
 
 
 # class DeactivateUser(View):
