@@ -5,6 +5,7 @@ Connecting to Firebase and managing Firestore Database
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from firebase_admin import auth as firebase_auth
 
 # Use the application default credentials
 cred = credentials.ApplicationDefault()
@@ -52,3 +53,8 @@ class FirebaseClient:
         """Filter item using conditions on firestore database"""
         docs = self._collection.where(field, condition, value).stream()
         return [{**doc.to_dict(), "id": doc.id} for doc in docs]
+
+
+class FirebaseAuth:
+    def create_user(self, email, password):
+        return firebase_auth.create_user(email=email, password=password)

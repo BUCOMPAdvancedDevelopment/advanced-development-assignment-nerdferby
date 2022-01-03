@@ -26,7 +26,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("product/new/", product_views.ProductCreateView.as_view(), name="product-create"),
     path("product/<str:pk>/", product_views.product_detail_view, name="product"),
-    # path("order/<int:pk>/", product_views.OrderDetailView.as_view(), name="order"),
+    path("order/<str:pk>/", product_views.order, name="order"),
     # path("order/new/", product_views.OrderCreateView.as_view(), name="order-create"),
     path("register/", user_views.register, name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
