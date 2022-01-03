@@ -11,5 +11,13 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Hello world!</h1>
+    {% for product in products %}
+        <div class="mb-5">
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.desc }}</p>
+            {% if logged_in %}
+                <a class="btn btn-primary" href="{% url 'order' product.id %}">Order</a>
+            {% endif %}
+        </div>
+    {% endfor %}
 {% endblock %}

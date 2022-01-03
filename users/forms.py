@@ -37,6 +37,10 @@ class UserRegisterForm(forms.Form):
         strip=False,
         help_text="Enter the same password as before, for verification.",
     )
+    address1 = forms.CharField(max_length=128, label="Address line 1")
+    address2 = forms.CharField(max_length=128, required=False, label="Address line 2")
+    address3 = forms.CharField(max_length=128, required=False, label="Address line 3")
+    post_code = forms.CharField(max_length=128, label="Postal code")
 
     def save(self):
         pass
