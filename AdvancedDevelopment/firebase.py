@@ -5,7 +5,6 @@ Connecting to Firebase and managing Firestore Database
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-from firebase_admin import auth as firebase_auth
 
 # Use the application default credentials
 cred = credentials.ApplicationDefault()
