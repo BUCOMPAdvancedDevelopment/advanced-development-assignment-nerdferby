@@ -42,7 +42,7 @@ def login(request):
             messages.error(request, "Failed to login!")
     else:
         form = CustomLoginForm()
-    return render(request, "users/login.html")
+    return render(request, "users/login.html", {"form": form})
 
 
 def logout(request):

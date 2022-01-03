@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -8,20 +9,39 @@ from .models import Profile
 
 class CustomLoginForm(forms.Form):
     email = forms.EmailField()
-    password = forms.PasswordInput()
+    password1 = forms.CharField(
+        label="Password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+    )
 
     class Meta:
-        fields = ["email", "password"]
+        fields = ["email", "password1"]
 
 
-class UserRegisterForm(UserCreationForm):
+class UserRegisterForm(forms.Form):
     """
     Registers the user through django and firebase
     """
+    username = forms.CharField(max_length=64)
     email = forms.EmailField()
+    password1 = forms.CharField(
+        label="Password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    password2 = forms.CharField(
+        label="Password confirmation",
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        strip=False,
+        help_text="Enter the same password as before, for verification.",
+    )
+
+    def save(self):
+        pass
 
     class Meta:
-        model = User
         fields = ["username", "email", "password1", "password2"]
 
 
