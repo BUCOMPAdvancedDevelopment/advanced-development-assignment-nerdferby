@@ -1,5 +1,6 @@
 """
-Connecting to Firebase and managing Firestore Database
+Firebase admin interface used for connecting to and amending
+Firestore database
 """
 
 import firebase_admin

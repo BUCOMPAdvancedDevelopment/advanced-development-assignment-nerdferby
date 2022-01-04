@@ -1,0 +1,12 @@
+{% extends "products/base.html" %}
+{% block content %}
+    <ul>
+    {% for order in my_orders %}
+        <li><b>#{{ order.id }}</b> · {{ order.product_name }} · {{ order.status }} · <a href="{% url 'cancel-order' order.id %}">Cancel</a>
+        {% if admin %}
+            <a href="{% url 'progress-order' order.id %}" class="btn">+ 1</a>
+        {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
