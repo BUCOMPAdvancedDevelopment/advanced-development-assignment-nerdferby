@@ -16,3 +16,22 @@ def generate_id(client: FirebaseClient):
         id_gen = gen_ran()
 
     return id_gen
+
+
+def read_login_session(request):
+    try:
+        session_ref = request.session["login"]
+    except KeyError:
+        session_ref = ""
+
+    return session_ref
+
+
+def logged_in(session_ref):
+    session = read_login_session(session_ref)
+    login = False
+    if session:
+        get_user = FirebaseClient("users").get_by_id(session)
+        if not get_user:  # if user is logged in
+            login = True
+    return login

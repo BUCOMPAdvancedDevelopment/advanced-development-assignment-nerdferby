@@ -18,7 +18,6 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from products import views as product_views
 from users import views as user_views
-from users.views import ProfileView
 
 urlpatterns = [
     path("", product_views.home, name="home"),
@@ -32,7 +31,6 @@ urlpatterns = [
     path("progress-order/<str:pk>/", product_views.progress_order, name="progress-order"),
     # path("order/new/", product_views.OrderCreateView.as_view(), name="order-create"),
     path("register/", user_views.register, name="register"),
-    path("profile/", ProfileView.as_view(), name="profile"),
     # path("profile/deactivate", DeactivateUser.as_view(), name="delete-profile"),
     # path(
     #     "login/",

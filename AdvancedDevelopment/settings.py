@@ -34,9 +34,12 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get('GOOGLE_APPLICATIO
                                                               GOOGLE_APPLICATION_CREDENTIALS)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secrets = secretmanager.SecretManagerServiceClient()
-SECRET_KEY = get_secret("projects/idyllic-kit-328813/secrets/django_secret_key/versions/latest",
-                        lambda: open(os.path.join(BASE_DIR, "django_secret_key.txt")).read())
+try:
+    secrets = secretmanager.SecretManagerServiceClient()
+    SECRET_KEY = get_secret("projects/idyllic-kit-328813/secrets/django_secret_key/versions/latest",
+                            lambda: open(os.path.join(BASE_DIR, "django_secret_key.txt")).read())
+except FileNotFoundError:
+    pass
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
