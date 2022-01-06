@@ -14,7 +14,7 @@ def register(request):
             firebase = FirebaseClient("users")
             firebase.create(document=str(data["username"]), data=data)
             messages.success(
-                request, f"Form valid. Username is {data['username']}. User not created"
+                request, f"Successfully registered {data['username']}! You may now login"
             )
     else:
         form = UserRegisterForm()
