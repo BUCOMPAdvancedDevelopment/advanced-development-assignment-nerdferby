@@ -1,12 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from argon2 import PasswordHasher
 
 from AdvancedDevelopment.firebase import FirebaseClient
 from .forms import UserRegisterForm, CustomLoginForm
-
-
-hasher_client = PasswordHasher()
 
 
 def register(request):
@@ -15,9 +11,6 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            data["password_hash"] = hasher_client.hash(data["password2"])
-            data.pop("password1")
-            data.pop("password2")
             firebase = FirebaseClient("users")
             firebase.create(document=str(data["username"]), data=data)
             messages.success(
@@ -39,11 +32,10 @@ def _login_validation(firebase_client: FirebaseClient, form: CustomLoginForm):
         query = firebase_client.filter("email", "==", form.cleaned_data["email"])
         user_found = False
         try:
-            user_found = query[0]  # returns user ref if found
+            user_found = query[0]
         except IndexError:  # Invalid login, user does not exist
             return False, user_found
-        password_match = user_found["password_hash"] == form.cleaned_data["password1"]
-        password_match = hasher_client.verify(user_found["password_hash"], form.cleaned_data["password1"])
+        password_match = user_found["password2"] == form.cleaned_data["password1"]
         return password_match, user_found
     else:
         return False, False
@@ -59,9 +51,9 @@ def login(request):
         form = CustomLoginForm(request.POST)
         if form.is_valid():
             client = FirebaseClient("users")
-            password_match, user_ref = _login_validation(client, form)
+            password_match, user_found = _login_validation(client, form)
             if password_match:
-                request.session["login"] = user_ref["username"]
+                request.session["login"] = user_found["username"]
                 messages.success(request, f"Successful login as, {form.cleaned_data['email']}")
             else:
                 messages.error(request, "You have entered the wrong login credentials!")

@@ -12,4 +12,3 @@ sqlparse>=0.2.4
 gunicorn>=20.1.0
 firebase_admin>=5.1.0
 google-cloud-secret-manager>=2.8.0
-requests~=2.26.0
