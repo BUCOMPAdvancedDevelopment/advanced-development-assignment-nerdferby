@@ -1,12 +1,24 @@
 {% extends "products/base.html" %}
 {% block content %}
-    <ul>
-    {% for order in my_orders %}
-        <li><b>#{{ order.id }}</b> · {{ order.product_name }} · {{ order.status }} · <a href="{% url 'cancel-order' order.id %}">Cancel</a>
-        {% if admin %}
-            <a href="{% url 'progress-order' order.id %}" class="btn">+ 1</a>
-        {% endif %}
-        </li>
-    {% endfor %}
-    </ul>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Status</th>
+            <th>Controls</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in my_orders %}
+        <tr>
+            <th scope="row">{{ order.id }}</th>
+            <td>{{ order.product_name }}</td>
+            <td>{{ order.status }}</td>
+            <td><a href="{% url 'cancel-order' order.id %}" class="btn btn-outline-danger">Cancel</a>
+                <a href="{% url 'progress-order' order.id %}" class="btn btn-outline-success">+1</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

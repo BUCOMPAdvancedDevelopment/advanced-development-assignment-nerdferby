@@ -48,27 +48,24 @@ def product_detail_view(request, pk):
 def progress_order(request, pk):
     """
     Progresses an order's status, e.g. dispatch to delivery
-    Requires an admin to progress
     :param request
     :param pk: Order ID
-    :return: Redirects to login page if not admin, to My Orders if successful
+    :return: Redirects to login page if not logged in, otherwise to My Orders
     """
     session = read_login_session(request)
     auth = logged_in(session)
-    if not auth:
+    if not auth:  # redirect non-logged-in to login page
         return redirect(users.views.login)
-    get_user = FirebaseClient("users").get_by_id(session)
+
     client_orders = FirebaseClient("orders")
     order_ref = client_orders.get_by_id(pk)
-    if get_user["username"] != "admin":
-        return redirect(users.views.login)
-    else:
-        status = int(order_ref["status"]) + 1
-        new_data = get_user
-        new_data["status"] = status
-        client_orders.update(pk, new_data)
-        messages.success(request, "Order progressed to: " + str(status))
-        return redirect(my_orders)
+
+    status = int(order_ref["status"]) + 1
+    new_data = order_ref
+    new_data["status"] = status
+    client_orders.update(pk, new_data)
+    messages.success(request, "Order progressed to: " + str(status))
+    return redirect(my_orders)
 
 
 def my_orders(request):
@@ -138,7 +135,7 @@ def order(request, pk):
     auth = logged_in(session)
 
     if auth:  # if user is logged-in
-        user_ref = FirebaseClient("users").get_by_id(session)
+        user_ref = FirebaseClient("users").get_by_id(session)  # get user info
         product_doc = client_products.get_by_id(pk)  # product
         if not product_doc:  # if product doesn't exist, redirect to home
             return redirect(home)
