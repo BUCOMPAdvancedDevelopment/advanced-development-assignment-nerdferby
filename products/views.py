@@ -116,7 +116,8 @@ def cancel_order(request, pk):
     if not auth:  # if not logged-in, redirect to login
         return redirect(users.views.login)
     else:
-        if order["uid"] != auth["username"]:  # checks if order matches to logged-in user
+        get_user = FirebaseClient("users").get_by_id(session)
+        if order["uid"] != get_user["username"]:  # checks if order matches to logged-in user
             return redirect(home)
         else:  # delete order
             client.delete_by_id(pk)  # delete order from db
